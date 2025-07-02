@@ -1,16 +1,3 @@
-# React + Vite
-
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
-
 # Frontend - Ferramenta Ágil de Estimativa de Esforço com IA
 
 ## Pré-requisitos
@@ -19,7 +6,7 @@ If you are developing a production application, we recommend using TypeScript wi
 - [npm](https://www.npmjs.com/) (geralmente já vem com o Node)
 - (Opcional) [Docker](https://www.docker.com/) para rodar em container
 
-## Rodando localmente
+## Como rodar localmente
 
 1. **Clone o repositório** (se ainda não fez):
    ```bash
@@ -42,7 +29,7 @@ If you are developing a production application, we recommend using TypeScript wi
 
 ---
 
-## Rodando com Docker
+## Como rodar com Docker
 
 1. **Construa a imagem Docker:**
    ```bash
@@ -68,4 +55,4 @@ If you are developing a production application, we recommend using TypeScript wi
 
 ## Observações
 - O backend deve estar rodando e com CORS liberado para integração real.
-- Por padrão, o frontend está mockado (dados locais). Para integrar com a API, ajuste os serviços em `src/services/` (crie se necessário).
+- Por padrão, o frontend está mockado (dados locais). Para integrar com a API, ajuste ou crie os serviços em `src/services/`.

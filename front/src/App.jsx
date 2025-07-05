@@ -6,11 +6,14 @@ import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Projetos from "./pages/Projetos";
 import Equipes from "./pages/Equipes";
+import Tarefas from "./pages/Tarefas";
+import PlanningPokerSessions from "./pages/PlanningPokerSessions";
+import PlanningPokerVote from "./pages/PlanningPokerVote";
 import './App.css'
 
 export default function App() {
   // Simulação de autenticação (trocar por contexto futuramente)
-  const [isAuth, setIsAuth] = useState(true); // Trocar para false para testar login
+  const [isAuth] = useState(true); // Trocar para false para testar login
 
   return (
     isAuth ? (
@@ -23,6 +26,9 @@ export default function App() {
               <Route path="/" element={<Dashboard />} />
               <Route path="/projetos" element={<Projetos />} />
               <Route path="/equipes" element={<Equipes />} />
+              <Route path="/tarefas" element={<Tarefas />} />
+              <Route path="/planning" element={<PlanningPokerSessions />} />
+              <Route path="/planning/:sessionId" element={<PlanningPokerVote />} />
               {/* Outras rotas aqui */}
               <Route path="*" element={<Navigate to="/" />} />
             </Routes>

@@ -36,15 +36,35 @@ export default function Tarefas() {
     setForm({ ...form, [e.target.name]: e.target.value });
   }
 
+  // Funções de manipulação de tarefas (prontas para integração futura com backend)
+  // Troque o conteúdo dessas funções por chamadas à API futuramente
+  async function fetchTarefas() {
+    // Exemplo: const response = await fetch('/api/tarefas');
+    // setTarefas(await response.json());
+    // Por enquanto, não faz nada pois usamos mock local
+  }
+
+  async function createTarefa(novaTarefa) {
+    // Exemplo: await fetch('/api/tarefas', { method: 'POST', body: JSON.stringify(novaTarefa) })
+    setTarefas(prev => [...prev, { id: Date.now(), ...novaTarefa }]);
+  }
+
+  async function updateTarefa(id, dados) {
+    // Exemplo: await fetch(`/api/tarefas/${id}`, { method: 'PUT', body: JSON.stringify(dados) })
+    setTarefas(prev => prev.map(t => t.id === id ? { ...t, ...dados } : t));
+  }
+
+  async function deleteTarefa(id) {
+    // Exemplo: await fetch(`/api/tarefas/${id}`, { method: 'DELETE' })
+    setTarefas(prev => prev.filter(t => t.id !== id));
+  }
+
   function handleSubmit(e) {
     e.preventDefault();
     if (editId) {
-      setTarefas(tarefas.map(t => t.id === editId ? { ...t, ...form } : t));
+      updateTarefa(editId, form);
     } else {
-      setTarefas([
-        ...tarefas,
-        { id: Date.now(), ...form },
-      ]);
+      createTarefa(form);
     }
     setForm({ 
       titulo: "", 
@@ -73,7 +93,7 @@ export default function Tarefas() {
 
   function handleDelete(id) {
     if (window.confirm("Tem certeza que deseja excluir esta tarefa?")) {
-      setTarefas(tarefas.filter(t => t.id !== id));
+      deleteTarefa(id);
     }
   }
 

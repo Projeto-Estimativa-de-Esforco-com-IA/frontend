@@ -24,9 +24,6 @@ export default function Sidebar() {
           </NavLink>
         ))}
       </nav>
-      <div className="mt-8">
-        <button className="w-full bg-red-500 py-2 rounded hover:bg-red-600 transition">Sair</button>
-      </div>
     </aside>
   );
 } 

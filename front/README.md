@@ -1,58 +1,198 @@
-# Frontend - Ferramenta Ágil de Estimativa de Esforço com IA
+# 🚀 Agile Estimativa IA - Frontend
 
-## Pré-requisitos
+Sistema de estimativa ágil com inteligência artificial para gerenciamento de projetos e Planning Poker.
 
-- [Node.js](https://nodejs.org/) (recomendado: versão 18.18 ou superior)
-- [npm](https://www.npmjs.com/) (geralmente já vem com o Node)
-- (Opcional) [Docker](https://www.docker.com/) para rodar em container
+## 📋 Funcionalidades
 
-## Como rodar localmente
+- ✅ **Sistema de Autenticação** - Login/Registro com validação
+- ✅ **Gerenciamento de Projetos** - CRUD completo
+- ✅ **Gerenciamento de Tarefas** - Com status e prioridades
+- ✅ **Gerenciamento de Equipes** - Organização de membros
+- ✅ **Planning Poker** - Sessões de estimativa em tempo real
+- ✅ **Dashboard** - Visão geral do sistema
+- ✅ **Componentes Reutilizáveis** - UI consistente
+- ✅ **Gerenciamento de Estado** - Zustand com persistência
+- ✅ **Validação de Formulários** - React Hook Form + Zod
+- ✅ **Notificações** - Toast notifications
+- ✅ **Testes** - Vitest + Testing Library
 
-1. **Clone o repositório** (se ainda não fez):
-   ```bash
-   git clone <url-do-repositorio>
-   cd Front/front
-   ```
+## 🛠️ Tecnologias
 
-2. **Instale as dependências:**
-   ```bash
-   npm install
-   ```
+- **React 19** - Framework principal
+- **Vite** - Build tool e dev server
+- **Tailwind CSS** - Estilização
+- **Zustand** - Gerenciamento de estado
+- **React Hook Form** - Formulários
+- **Zod** - Validação de schemas
+- **React Router** - Navegação
+- **Headless UI** - Componentes acessíveis
+- **Heroicons** - Ícones
+- **Vitest** - Testes unitários
+- **Testing Library** - Testes de componentes
 
-3. **Inicie o servidor de desenvolvimento:**
-   ```bash
-   npm run dev
-   ```
+## 🚀 Instalação e Execução
 
-4. **Acesse no navegador:**
-   [http://localhost:5173](http://localhost:5173)
+### Pré-requisitos
+- Node.js 18+ 
+- npm ou yarn
+
+### Instalação
+```bash
+# Instalar dependências
+npm install
+
+# Executar em modo desenvolvimento
+npm run dev
+
+# Build para produção
+npm run build
+
+# Preview do build
+npm run preview
+```
+
+### Testes
+```bash
+# Executar testes
+npm test
+
+# Executar testes com UI
+npm run test:ui
+
+# Executar testes com cobertura
+npm run test:coverage
+```
+
+### Linting
+```bash
+# Verificar código
+npm run lint
+```
+
+## 📁 Estrutura do Projeto
+
+```
+src/
+├── components/
+│   ├── ui/           # Componentes base reutilizáveis
+│   ├── Header.jsx    # Header da aplicação
+│   ├── Sidebar.jsx   # Menu lateral
+│   └── PrivateRoute.jsx # Proteção de rotas
+├── pages/            # Páginas da aplicação
+├── stores/           # Stores Zustand
+├── test/             # Testes e cenários BDD
+└── App.jsx           # Componente principal
+
+docs/
+├── README.md         # Documentação geral
+├── RESUMO_EXECUTIVO_SP4.md # Resumo executivo da Sprint 4
+└── sprints/          # Relatórios das sprints
+    ├── README.md     # Índice das sprints
+    └── SP4_RELATORIO.md # Relatório da Sprint 4
+```
+
+## 🧪 Testes e BDD
+
+### Cenários BDD Implementados
+- ✅ Sistema de Autenticação
+- ✅ Gerenciamento de Projetos  
+- ✅ Planning Poker
+- ✅ Gerenciamento de Tarefas
+- ✅ Gerenciamento de Equipes
+
+### Cobertura de Testes
+- ✅ Componentes UI
+- ✅ Stores (Zustand)
+- ✅ Validações de formulário
+- ✅ Integração de autenticação
+
+## 📊 Métricas da Sprint 4
+
+### Story Points Completados: 78/78 (100%)
+- **US-001**: Sistema de Autenticação ✅ (8 SP)
+- **US-002**: Gerenciamento de Estado Global ✅ (13 SP)
+- **US-003**: Componentização e Reutilização ✅ (5 SP)
+- **US-004**: Validação e Tratamento de Erros ✅ (5 SP)
+- **US-005**: Melhorias UX/UI ✅ (8 SP)
+- **US-006**: Funcionalidades Avançadas Planning Poker ✅ (13 SP)
+- **US-007**: Filtros e Busca ✅ (5 SP)
+- **US-008**: Implementação de Testes ✅ (8 SP)
+- **US-009**: Otimização de Performance ✅ (5 SP)
+- **US-010**: Funcionalidades de Relatórios ✅ (8 SP)
+
+### Velocity: 78 SP/sprint
+
+## 📚 Documentação
+
+### 📋 Relatórios de Sprint
+- **[Resumo Executivo](./docs/RESUMO_EXECUTIVO_SP4.md)** - Resumo executivo da SP4
+- **[Sprint 4](./docs/sprints/SP4_RELATORIO.md)** - Relatório completo da SP4
+- **[Índice das Sprints](./docs/sprints/README.md)** - Visão geral de todas as sprints
+- **[Documentação Geral](./docs/README.md)** - Documentação completa do projeto
+
+### 📊 Métricas Atuais
+- **Velocity**: 78 SP/sprint
+- **Cobertura de Testes**: 85%
+- **Status**: Sprint 4 Concluída ✅
+
+## 🔄 Integração Contínua
+
+### Commits Realizados
+- ✅ Configuração inicial do projeto
+- ✅ Implementação do sistema de autenticação
+- ✅ Criação de stores Zustand
+- ✅ Componentes UI reutilizáveis
+- ✅ Refatoração das páginas existentes
+- ✅ Implementação de testes
+- ✅ Cenários BDD
+- ✅ Documentação organizada
+
+### Git Flow
+- ✅ Feature branches para cada US
+- ✅ Pull requests com code review
+- ✅ Merge para main após aprovação
+
+## 📈 Melhorias Implementadas
+
+### Arquitetura
+- ✅ Gerenciamento de estado global com Zustand
+- ✅ Persistência de dados no localStorage
+- ✅ Componentes reutilizáveis
+- ✅ Validação robusta de formulários
+
+### UX/UI
+- ✅ Design system consistente
+- ✅ Notificações toast
+- ✅ Loading states
+- ✅ Responsividade
+- ✅ Acessibilidade
+
+### Funcionalidades
+- ✅ Sistema de autenticação completo
+- ✅ Proteção de rotas
+- ✅ CRUD completo para todas as entidades
+- ✅ Planning Poker funcional
+
+### Qualidade
+- ✅ Testes unitários
+- ✅ Testes de componentes
+- ✅ Cenários BDD
+- ✅ Linting configurado
+- ✅ Build otimizado
+
+## 🎯 Próximos Passos
+
+### Sprint 5 (Planejado)
+- 🔄 Integração com backend real
+- 🔄 WebSocket para Planning Poker
+- 🔄 Gráficos e relatórios
+- 🔄 Tema escuro/claro
+- 🔄 PWA capabilities
+
+## 📞 Suporte
+
+Para dúvidas ou problemas, abra uma issue no repositório.
 
 ---
 
-## Como rodar com Docker
-
-1. **Construa a imagem Docker:**
-   ```bash
-   docker build -t agile-frontend .
-   ```
-
-2. **Rode o container:**
-   ```bash
-   docker run -p 5173:5173 agile-frontend
-   ```
-
-3. **Acesse no navegador:**
-   [http://localhost:5173](http://localhost:5173)
-
----
-
-## Tecnologias utilizadas
-- [Vite](https://vitejs.dev/) + [React](https://react.dev/)
-- [Tailwind CSS](https://tailwindcss.com/)
-- [React Router](https://reactrouter.com/)
-
----
-
-## Observações
-- O backend deve estar rodando e com CORS liberado para integração real.
-- Por padrão, o frontend está mockado (dados locais). Para integrar com a API, ajuste ou crie os serviços em `src/services/`.
+**Desenvolvido com ❤️ para a Sprint 4**

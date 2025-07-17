@@ -7,17 +7,20 @@ import toast from "react-hot-toast";
 import { useAuthStore } from "../stores/authStore";
 import Button from "../components/ui/Button";
 import Input from "../components/ui/Input";
+import { signup } from '../api';
 
 const loginSchema = z.object({
-  email: z.string().email("E-mail inválido"),
+  username: z.string().min(2, "Usuário obrigatório"),
   password: z.string().min(6, "Senha deve ter pelo menos 6 caracteres"),
 });
 
 const registerSchema = z.object({
-  name: z.string().min(2, "Nome deve ter pelo menos 2 caracteres"),
+  username: z.string().min(2, "Usuário obrigatório"),
   email: z.string().email("E-mail inválido"),
   password: z.string().min(6, "Senha deve ter pelo menos 6 caracteres"),
   confirmPassword: z.string(),
+  first_name: z.string().optional(),
+  last_name: z.string().optional(),
 }).refine((data) => data.password === data.confirmPassword, {
   message: "Senhas não coincidem",
   path: ["confirmPassword"],
@@ -41,12 +44,22 @@ export default function Login() {
   const onSubmit = async (data) => {
     try {
       if (isRegister) {
-        // Simulação de registro
-        toast.success("Conta criada com sucesso!");
-        setIsRegister(false);
-        reset();
+        try {
+          await signup({
+            username: data.username,
+            email: data.email,
+            password: data.password,
+            first_name: data.first_name,
+            last_name: data.last_name,
+          });
+          toast.success("Conta criada com sucesso!");
+          setIsRegister(false);
+          reset();
+        } catch (err) {
+          toast.error("Erro ao registrar: " + (err.message || ""));
+        }
       } else {
-        const result = await login(data.email, data.password);
+        const result = await login(data.username, data.password);
         if (result.success) {
           toast.success("Login realizado com sucesso!");
           const from = location.state?.from?.pathname || "/";
@@ -70,20 +83,40 @@ export default function Login() {
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           {isRegister && (
             <Input
-              label="Nome"
-              {...register("name")}
-              error={errors.name?.message}
-              placeholder="Seu nome completo"
+              label="Usuário"
+              type="text"
+              {...register("username")}
+              error={errors.username?.message}
+              placeholder="Seu usuário"
             />
           )}
-          
-          <Input
-            label="E-mail"
-            type="email"
-            {...register("email")}
-            error={errors.email?.message}
-            placeholder="seu@email.com"
-          />
+          {isRegister && (
+            <Input
+              label="E-mail"
+              type="email"
+              {...register("email")}
+              error={errors.email?.message}
+              placeholder="seu@email.com"
+            />
+          )}
+          {isRegister && (
+            <Input
+              label="Nome"
+              type="text"
+              {...register("first_name")}
+              error={errors.first_name?.message}
+              placeholder="Primeiro nome (opcional)"
+            />
+          )}
+          {isRegister && (
+            <Input
+              label="Sobrenome"
+              type="text"
+              {...register("last_name")}
+              error={errors.last_name?.message}
+              placeholder="Sobrenome (opcional)"
+            />
+          )}
           
           <Input
             label="Senha"

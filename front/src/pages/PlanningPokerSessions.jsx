@@ -7,7 +7,7 @@ export default function PlanningPokerSessions() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showForm, setShowForm] = useState(false);
-  const [form, setForm] = useState({ name: "", owner: "" });
+  const [form, setForm] = useState({ project_id: '', team_id: '', task_ids: '' });
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -34,13 +34,19 @@ export default function PlanningPokerSessions() {
 
   async function handleSubmit(e) {
     e.preventDefault();
+    // task_ids deve ser um array de inteiros
+    const payload = {
+      project_id: Number(form.project_id),
+      team_id: Number(form.team_id),
+      task_ids: form.task_ids.split(',').map(id => Number(id.trim())).filter(Boolean)
+    };
     try {
       await fetch(`${API_URL}/planning-sessions/start/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify(payload),
       });
-      setForm({ name: "", owner: "" });
+      setForm({ project_id: '', team_id: '', task_ids: '' });
       setShowForm(false);
       fetchSessions();
     } catch (err) {
@@ -78,23 +84,34 @@ export default function PlanningPokerSessions() {
           {showForm && (
             <form onSubmit={handleSubmit} className="bg-white p-6 rounded shadow mb-6 max-w-lg">
               <div className="mb-4">
-                <label className="block mb-1 font-medium">Nome da Sessão</label>
+                <label className="block mb-1 font-medium">ID do Projeto</label>
                 <input
-                  name="name"
-                  value={form.name}
+                  name="project_id"
+                  value={form.project_id}
                   onChange={handleChange}
                   required
                   className="w-full border px-3 py-2 rounded"
                 />
               </div>
               <div className="mb-4">
-                <label className="block mb-1 font-medium">Dono da Sessão</label>
+                <label className="block mb-1 font-medium">ID da Equipe</label>
                 <input
-                  name="owner"
-                  value={form.owner}
+                  name="team_id"
+                  value={form.team_id}
                   onChange={handleChange}
                   required
                   className="w-full border px-3 py-2 rounded"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block mb-1 font-medium">IDs das Tarefas (separados por vírgula)</label>
+                <input
+                  name="task_ids"
+                  value={form.task_ids}
+                  onChange={handleChange}
+                  required
+                  className="w-full border px-3 py-2 rounded"
+                  placeholder="Ex: 1,2,3"
                 />
               </div>
               <div className="flex gap-2">

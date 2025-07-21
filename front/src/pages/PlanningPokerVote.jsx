@@ -19,6 +19,7 @@ export default function PlanningPokerVote() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [allVotos, setAllVotos] = useState([]); // [{nome, role, voto}]
+  const [taskId, setTaskId] = useState('');
   const navigate = useNavigate();
 
   // Buscar votos da sessão se gerente
@@ -50,7 +51,7 @@ export default function PlanningPokerVote() {
       await fetch(`${API_URL}/planning-sessions/vote/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ session_id: sessionId, nome, role, voto: card }),
+        body: JSON.stringify({ session_id: sessionId, task_id: Number(taskId), value: card }),
       });
       setVoto(card);
       setVotou(true);
@@ -93,6 +94,15 @@ export default function PlanningPokerVote() {
               <option key={r.value} value={r.value}>{r.label}</option>
             ))}
           </select>
+        </div>
+        <div>
+          <label className="block mb-1 font-medium">ID da Tarefa</label>
+          <input
+            className="border px-3 py-2 rounded w-full max-w-xs"
+            value={taskId}
+            onChange={e => setTaskId(e.target.value)}
+            placeholder="Digite o ID da tarefa"
+          />
         </div>
       </div>
       <h2 className="text-lg font-semibold mb-4">Escolha sua carta:</h2>

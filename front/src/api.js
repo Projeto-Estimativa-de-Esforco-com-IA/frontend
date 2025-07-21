@@ -1,13 +1,24 @@
 // Utilitário de API para integração com o backend Django
-export const API_URL = "https://backend-bskh.onrender.com";
+export const API_URL = "https://backend-bskh.onrender.com/api";
 
 function getUrl(path) {
   return API_URL + path;
 }
 
+function getCookie(name) {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop().split(';').shift();
+}
+
 function getAuthHeaders() {
   const token = localStorage.getItem('accessToken');
-  return token ? { Authorization: `Bearer ${token}` } : {};
+  const csrfToken = getCookie('csrftoken');
+  return {
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    'accept': 'application/json',
+    ...(csrfToken ? { 'X-CSRFTOKEN': csrfToken } : {}),
+  };
 }
 
 export async function apiGet(path) {
@@ -35,11 +46,15 @@ export async function apiPost(path, data) {
   return res.json();
 }
 
-export async function loginJWT({ username, password }) {
+export async function loginJWT({ email, password }) {
   const res = await fetch(getUrl('login/'), {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ username, password }),
+    headers: {
+      'Content-Type': 'application/json',
+      'accept': 'application/json',
+      ...((getCookie('csrftoken')) ? { 'X-CSRFTOKEN': getCookie('csrftoken') } : {}),
+    },
+    body: JSON.stringify({ email, password }),
   });
   if (!res.ok) throw new Error(await res.text());
   return res.json();
@@ -48,7 +63,11 @@ export async function loginJWT({ username, password }) {
 export async function signup({ username, email, password, first_name, last_name }) {
   const res = await fetch(getUrl('signup/'), {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      'accept': 'application/json',
+      ...((getCookie('csrftoken')) ? { 'X-CSRFTOKEN': getCookie('csrftoken') } : {}),
+    },
     body: JSON.stringify({ username, email, password, first_name, last_name }),
   });
   if (!res.ok) throw new Error(await res.text());
@@ -58,7 +77,10 @@ export async function signup({ username, email, password, first_name, last_name 
 export async function changePassword({ old_password, new_password }) {
   const res = await fetch(getUrl('change-password/'), {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...getAuthHeaders() },
+    headers: {
+      'Content-Type': 'application/json',
+      ...getAuthHeaders(),
+    },
     body: JSON.stringify({ old_password, new_password }),
   });
   if (!res.ok) throw new Error(await res.text());
@@ -68,7 +90,10 @@ export async function changePassword({ old_password, new_password }) {
 export async function updateProfile(data) {
   const res = await fetch(getUrl('update-profile/'), {
     method: 'PATCH',
-    headers: { 'Content-Type': 'application/json', ...getAuthHeaders() },
+    headers: {
+      'Content-Type': 'application/json',
+      ...getAuthHeaders(),
+    },
     body: JSON.stringify(data),
   });
   if (!res.ok) throw new Error(await res.text());

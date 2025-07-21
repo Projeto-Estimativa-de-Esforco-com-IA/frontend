@@ -10,8 +10,8 @@ import Input from "../components/ui/Input";
 import { signup } from '../api';
 
 const loginSchema = z.object({
-  username: z.string().min(2, "Usuário obrigatório"),
-  password: z.string().min(6, "Senha deve ter pelo menos 6 caracteres"),
+  email: z.string().email('E-mail obrigatório'),
+  password: z.string().min(6, 'Senha deve ter pelo menos 6 caracteres'),
 });
 
 const registerSchema = z.object({
@@ -52,24 +52,24 @@ export default function Login() {
             first_name: data.first_name,
             last_name: data.last_name,
           });
-          toast.success("Conta criada com sucesso!");
+          toast.success('Conta criada com sucesso!');
           setIsRegister(false);
           reset();
         } catch (err) {
-          toast.error("Erro ao registrar: " + (err.message || ""));
+          toast.error('Erro ao registrar: ' + (err.message || ''));
         }
       } else {
-        const result = await login(data.username, data.password);
+        const result = await login(data.email, data.password);
         if (result.success) {
-          toast.success("Login realizado com sucesso!");
-          const from = location.state?.from?.pathname || "/";
+          toast.success('Login realizado com sucesso!');
+          const from = location.state?.from?.pathname || '/';
           navigate(from, { replace: true });
         } else {
-          toast.error(result.error || "Erro no login");
+          toast.error(result.error || 'Erro no login');
         }
       }
     } catch (error) {
-      toast.error("Erro inesperado");
+      toast.error('Erro inesperado');
     }
   };
 

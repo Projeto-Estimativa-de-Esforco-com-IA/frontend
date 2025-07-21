@@ -9,12 +9,10 @@ export default function Tarefas() {
   const [error, setError] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState({ 
-    titulo: "", 
-    descricao: "", 
-    projeto: "", 
-    prioridade: "Média",
-    status: "Pendente",
-    responsavel: ""
+    title: "", 
+    description: "", 
+    project: "", 
+    category: ""
   });
   const [editId, setEditId] = useState(null);
 
@@ -65,27 +63,31 @@ export default function Tarefas() {
 
   async function handleSubmit(e) {
     e.preventDefault();
+    const payload = {
+      title: form.title,
+      description: form.description,
+      project: selectedProjeto,
+      category: form.category
+    };
     try {
       if (editId) {
         await fetch(`${API_URL}/tasks/${editId}/edit/`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(form),
+          body: JSON.stringify(payload),
         });
       } else {
         await fetch(`${API_URL}/projects/${selectedProjeto}/tasks/add/`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ ...form, projeto: selectedProjeto }),
+          body: JSON.stringify(payload),
         });
       }
       setForm({ 
-        titulo: "", 
-        descricao: "", 
-        projeto: "", 
-        prioridade: "Média",
-        status: "Pendente",
-        responsavel: ""
+        title: "", 
+        description: "", 
+        project: "", 
+        category: ""
       });
       setShowForm(false);
       setEditId(null);
@@ -97,12 +99,10 @@ export default function Tarefas() {
 
   function handleEdit(tarefa) {
     setForm({ 
-      titulo: tarefa.titulo, 
-      descricao: tarefa.descricao, 
-      projeto: tarefa.projeto,
-      prioridade: tarefa.prioridade,
-      status: tarefa.status,
-      responsavel: tarefa.responsavel
+      title: tarefa.title, 
+      description: tarefa.description, 
+      project: tarefa.project,
+      category: tarefa.category
     });
     setEditId(tarefa.id);
     setShowForm(true);
@@ -148,12 +148,10 @@ export default function Tarefas() {
             setShowForm(true); 
             setEditId(null); 
             setForm({ 
-              titulo: "", 
-              descricao: "", 
-              projeto: "", 
-              prioridade: "Média",
-              status: "Pendente",
-              responsavel: ""
+              title: "", 
+              description: "", 
+              project: "", 
+              category: ""
             }); 
           }}
         >
@@ -183,8 +181,8 @@ export default function Tarefas() {
                 <div className="md:col-span-2">
                   <label className="block mb-1 font-medium">Título</label>
                   <input
-                    name="titulo"
-                    value={form.titulo}
+                    name="title"
+                    value={form.title}
                     onChange={handleChange}
                     required
                     className="w-full border px-3 py-2 rounded"
@@ -193,8 +191,8 @@ export default function Tarefas() {
                 <div className="md:col-span-2">
                   <label className="block mb-1 font-medium">Descrição</label>
                   <textarea
-                    name="descricao"
-                    value={form.descricao}
+                    name="description"
+                    value={form.description}
                     onChange={handleChange}
                     required
                     rows="3"
@@ -202,41 +200,13 @@ export default function Tarefas() {
                   />
                 </div>
                 <div>
-                  <label className="block mb-1 font-medium">Responsável</label>
+                  <label className="block mb-1 font-medium">Categoria</label>
                   <input
-                    name="responsavel"
-                    value={form.responsavel}
+                    name="category"
+                    value={form.category}
                     onChange={handleChange}
-                    required
                     className="w-full border px-3 py-2 rounded"
                   />
-                </div>
-                <div>
-                  <label className="block mb-1 font-medium">Prioridade</label>
-                  <select
-                    name="prioridade"
-                    value={form.prioridade}
-                    onChange={handleChange}
-                    className="w-full border px-3 py-2 rounded"
-                  >
-                    <option value="Baixa">Baixa</option>
-                    <option value="Média">Média</option>
-                    <option value="Alta">Alta</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block mb-1 font-medium">Status</label>
-                  <select
-                    name="status"
-                    value={form.status}
-                    onChange={handleChange}
-                    className="w-full border px-3 py-2 rounded"
-                  >
-                    <option value="Pendente">Pendente</option>
-                    <option value="Em andamento">Em andamento</option>
-                    <option value="Bloqueada">Bloqueada</option>
-                    <option value="Concluída">Concluída</option>
-                  </select>
                 </div>
               </div>
               <div className="flex gap-2 mt-4">
@@ -250,12 +220,10 @@ export default function Tarefas() {
                     setShowForm(false); 
                     setEditId(null); 
                     setForm({ 
-                      titulo: "", 
-                      descricao: "", 
-                      projeto: "", 
-                      prioridade: "Média",
-                      status: "Pendente",
-                      responsavel: ""
+                      title: "", 
+                      description: "", 
+                      project: "", 
+                      category: ""
                     }); 
                   }}
                 >

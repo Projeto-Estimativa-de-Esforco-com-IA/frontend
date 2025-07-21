@@ -36,10 +36,10 @@ export const useAuthStore = create(
         }
       },
 
-      login: async (username, password) => {
+      login: async (email, password) => {
         set({ isLoading: true, error: null });
         try {
-          const data = await loginJWT({ username, password });
+          const data = await loginJWT({ email, password });
           set({
             user: data.user,
             isAuthenticated: true,

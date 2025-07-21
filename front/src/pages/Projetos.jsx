@@ -6,7 +6,7 @@ export default function Projetos() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showForm, setShowForm] = useState(false);
-  const [form, setForm] = useState({ nome: "", descricao: "", categoria: "" });
+  const [form, setForm] = useState({ name: "", description: "", category: "" });
   const [editId, setEditId] = useState(null);
 
   useEffect(() => {
@@ -47,7 +47,7 @@ export default function Projetos() {
           body: JSON.stringify(form),
         });
       }
-      setForm({ nome: "", descricao: "", categoria: "" });
+      setForm({ name: "", description: "", category: "" });
       setShowForm(false);
       setEditId(null);
       fetchProjetos();
@@ -57,7 +57,7 @@ export default function Projetos() {
   }
 
   function handleEdit(proj) {
-    setForm({ nome: proj.nome, descricao: proj.descricao, categoria: proj.categoria });
+    setForm({ name: proj.name, description: proj.description, category: proj.category });
     setEditId(proj.id);
     setShowForm(true);
   }
@@ -79,7 +79,7 @@ export default function Projetos() {
         <h1 className="text-2xl font-bold">Projetos</h1>
         <button
           className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-          onClick={() => { setShowForm(true); setEditId(null); setForm({ nome: "", descricao: "", categoria: "" }); }}
+          onClick={() => { setShowForm(true); setEditId(null); setForm({ name: "", description: "", category: "" }); }}
         >
           Novo Projeto
         </button>
@@ -94,8 +94,8 @@ export default function Projetos() {
               <div className="mb-4">
                 <label className="block mb-1 font-medium">Nome</label>
                 <input
-                  name="nome"
-                  value={form.nome}
+                  name="name"
+                  value={form.name}
                   onChange={handleChange}
                   required
                   className="w-full border px-3 py-2 rounded"
@@ -104,8 +104,8 @@ export default function Projetos() {
               <div className="mb-4">
                 <label className="block mb-1 font-medium">Descrição</label>
                 <input
-                  name="descricao"
-                  value={form.descricao}
+                  name="description"
+                  value={form.description}
                   onChange={handleChange}
                   required
                   className="w-full border px-3 py-2 rounded"
@@ -114,24 +114,24 @@ export default function Projetos() {
               <div className="mb-4">
                 <label className="block mb-1 font-medium">Categoria</label>
                 <input
-                  name="categoria"
-                  value={form.categoria}
+                  name="category"
+                  value={form.category}
                   onChange={handleChange}
                   className="w-full border px-3 py-2 rounded"
                 />
               </div>
               <div className="flex gap-2">
                 <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded">{editId ? "Salvar Alterações" : "Salvar"}</button>
-                <button type="button" className="bg-gray-300 px-4 py-2 rounded" onClick={() => { setShowForm(false); setEditId(null); setForm({ nome: "", descricao: "", categoria: "" }); }}>Cancelar</button>
+                <button type="button" className="bg-gray-300 px-4 py-2 rounded" onClick={() => { setShowForm(false); setEditId(null); setForm({ name: "", description: "", category: "" }); }}>Cancelar</button>
               </div>
             </form>
           )}
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {projetos.map((proj) => (
               <div key={proj.id} className="bg-white p-4 rounded shadow border relative">
-                <h2 className="font-bold text-lg mb-1">{proj.nome}</h2>
-                <p className="text-gray-700 mb-2">{proj.descricao}</p>
-                <span className="inline-block bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs mb-2">{proj.categoria}</span>
+                <h2 className="font-bold text-lg mb-1">{proj.name}</h2>
+                <p className="text-gray-700 mb-2">{proj.description}</p>
+                <span className="inline-block bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs mb-2">{proj.category}</span>
                 <div className="absolute top-2 right-2 flex gap-2">
                   <button onClick={() => handleEdit(proj)} className="text-blue-600 hover:underline text-sm">Editar</button>
                   <button onClick={() => handleDelete(proj.id)} className="text-red-600 hover:underline text-sm">Excluir</button>

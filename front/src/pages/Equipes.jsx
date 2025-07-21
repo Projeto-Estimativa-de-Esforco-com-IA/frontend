@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getUsers, addUser, editUser, deleteUser } from "../api";
+import { API_URL } from "../api";
 
 export default function Equipes() {
   const [equipes, setEquipes] = useState([]);
@@ -17,10 +17,11 @@ export default function Equipes() {
     setLoading(true);
     setError(null);
     try {
-      const data = await getUsers();
+      const res = await fetch(`${API_URL}/users/`);
+      const data = await res.json();
       setEquipes(data);
     } catch (err) {
-      setError("Erro ao carregar equipes/usuários");
+      setError("Erro ao carregar equipes");
     } finally {
       setLoading(false);
     }
@@ -33,17 +34,26 @@ export default function Equipes() {
   async function handleSubmit(e) {
     e.preventDefault();
     try {
+      const membrosArray = form.membros.split(",").map(m => m.trim());
       if (editId) {
-        await editUser(editId, { nome: form.nome, membros: form.membros.split(",").map(m => m.trim()) });
+        await fetch(`${API_URL}/users/${editId}/edit/`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ nome: form.nome, membros: membrosArray }),
+        });
       } else {
-        await addUser({ nome: form.nome, membros: form.membros.split(",").map(m => m.trim()) });
+        await fetch(`${API_URL}/users/add/`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ nome: form.nome, membros: membrosArray }),
+        });
       }
       setForm({ nome: "", membros: "" });
       setShowForm(false);
       setEditId(null);
       fetchEquipes();
     } catch (err) {
-      setError("Erro ao salvar equipe/usuário");
+      setError("Erro ao salvar equipe");
     }
   }
 
@@ -54,12 +64,12 @@ export default function Equipes() {
   }
 
   async function handleDelete(id) {
-    if (window.confirm("Tem certeza que deseja excluir esta equipe/usuário?")) {
+    if (window.confirm("Tem certeza que deseja excluir esta equipe?")) {
       try {
-        await deleteUser(id);
+        await fetch(`${API_URL}/users/${id}/delete/`, { method: "DELETE" });
         fetchEquipes();
       } catch (err) {
-        setError("Erro ao excluir equipe/usuário");
+        setError("Erro ao excluir equipe");
       }
     }
   }

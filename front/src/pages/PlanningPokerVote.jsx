@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { voteTask } from "../api";
+import { API_URL } from "../api";
 
 const cards = ["0", "1/2", "1", "2", "3", "5", "8", "13", "21", "?", "∞"];
 const roles = [
@@ -21,14 +21,39 @@ export default function PlanningPokerVote() {
   const [allVotos, setAllVotos] = useState([]); // [{nome, role, voto}]
   const navigate = useNavigate();
 
+  // Buscar votos da sessão se gerente
+  useEffect(() => {
+    if (role === "gerente") {
+      fetchVotos();
+      const interval = setInterval(fetchVotos, 2000);
+      return () => clearInterval(interval);
+    }
+    // Limpa votos se não for gerente
+    setAllVotos([]);
+    // eslint-disable-next-line
+  }, [role, sessionId]);
+
+  async function fetchVotos() {
+    try {
+      const res = await fetch(`${API_URL}/planning-sessions/${sessionId}/votos`);
+      const data = await res.json();
+      setAllVotos(data);
+    } catch (err) {
+      // Não exibe erro para não poluir a tela
+    }
+  }
+
   async function handleVote(card) {
     setLoading(true);
     setError(null);
     try {
-      await voteTask({ sessionId, nome, role, voto: card });
+      await fetch(`${API_URL}/planning-sessions/vote/`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ session_id: sessionId, nome, role, voto: card }),
+      });
       setVoto(card);
       setVotou(true);
-      // Em produção, buscar votos do backend após votar
     } catch (err) {
       setError("Erro ao registrar voto");
     } finally {
@@ -39,7 +64,7 @@ export default function PlanningPokerVote() {
   function handleReset() {
     setVoto(null);
     setVotou(false);
-    // Em produção, remover voto do backend se necessário
+    // Não remove voto do backend (poderia implementar se necessário)
   }
 
   return (
@@ -96,14 +121,31 @@ export default function PlanningPokerVote() {
           Voto registrado! Aguarde o resultado da sessão.
         </div>
       )}
-      {/* Painel de votos em tempo real para gerente - depende de backend ou websocket */}
+      {/* Painel de votos em tempo real para gerente */}
       {role === "gerente" && (
         <div className="mt-8">
-          <h2 className="text-xl font-bold mb-2">Votos dos membros (não implementado)</h2>
-          <div className="text-gray-500 text-sm">* Exibição de votos em tempo real depende de backend/websocket.</div>
+          <h2 className="text-xl font-bold mb-2">Votos dos membros (tempo real)</h2>
+          <table className="w-full bg-white rounded shadow">
+            <thead>
+              <tr>
+                <th className="text-left p-2">Nome</th>
+                <th className="text-left p-2">Papel</th>
+                <th className="text-left p-2">Voto</th>
+              </tr>
+            </thead>
+            <tbody>
+              {allVotos.map((v, idx) => (
+                <tr key={idx} className="border-t">
+                  <td className="p-2">{v.nome}</td>
+                  <td className="p-2">{roles.find(r => r.value === v.role)?.label || v.role}</td>
+                  <td className="p-2 font-bold">{v.voto}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       )}
-      <div className="text-gray-500 text-sm mt-8">* Esta é uma versão integrada ao backend. Exibição de votos em tempo real depende de implementação adicional.</div>
+      <div className="text-gray-500 text-sm mt-8">* Agora integrado ao backend. Exibição de votos em tempo real depende do backend atualizar os votos.</div>
     </div>
   );
 } 

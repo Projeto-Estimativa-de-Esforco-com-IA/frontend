@@ -1,9 +1,8 @@
 // Utilitário de API para integração com o backend Django
-// Altere a URL base conforme necessário
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api/';
+export const API_URL = "https://backend-bskh.onrender.com";
 
 function getUrl(path) {
-  return API_BASE + path;
+  return API_URL + path;
 }
 
 function getAuthHeaders() {

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { startSession, deleteSession } from "../api";
+import { API_URL } from "../api";
 
 export default function PlanningPokerSessions() {
   const [sessions, setSessions] = useState([]);
@@ -18,8 +18,9 @@ export default function PlanningPokerSessions() {
     setLoading(true);
     setError(null);
     try {
-      // Não há endpoint GET para listar sessões, então manteremos o mock local ou adaptar conforme backend
-      setSessions([]); // Ajuste se backend fornecer endpoint GET
+      const res = await fetch(`${API_URL}/planning-sessions/`);
+      const data = await res.json();
+      setSessions(data);
     } catch (err) {
       setError("Erro ao carregar sessões");
     } finally {
@@ -34,7 +35,11 @@ export default function PlanningPokerSessions() {
   async function handleSubmit(e) {
     e.preventDefault();
     try {
-      await startSession(form);
+      await fetch(`${API_URL}/planning-sessions/start/`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
       setForm({ name: "", owner: "" });
       setShowForm(false);
       fetchSessions();
@@ -46,7 +51,7 @@ export default function PlanningPokerSessions() {
   async function handleDelete(id) {
     if (window.confirm("Tem certeza que deseja excluir esta sessão?")) {
       try {
-        await deleteSession(id);
+        await fetch(`${API_URL}/planning-sessions/${id}/delete/`, { method: "DELETE" });
         fetchSessions();
       } catch (err) {
         setError("Erro ao excluir sessão");

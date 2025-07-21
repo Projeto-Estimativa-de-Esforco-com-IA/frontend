@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getProjects, addProject, editProject, deleteProject } from "../api";
+import { API_URL } from "../api";
 
 export default function Projetos() {
   const [projetos, setProjetos] = useState([]);
@@ -17,7 +17,8 @@ export default function Projetos() {
     setLoading(true);
     setError(null);
     try {
-      const data = await getProjects();
+      const res = await fetch(`${API_URL}/projects/`);
+      const data = await res.json();
       setProjetos(data);
     } catch (err) {
       setError("Erro ao carregar projetos");
@@ -34,9 +35,17 @@ export default function Projetos() {
     e.preventDefault();
     try {
       if (editId) {
-        await editProject(editId, form);
+        await fetch(`${API_URL}/projects/${editId}/edit/`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(form),
+        });
       } else {
-        await addProject(form);
+        await fetch(`${API_URL}/projects/add/`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(form),
+        });
       }
       setForm({ nome: "", descricao: "", categoria: "" });
       setShowForm(false);
@@ -56,7 +65,7 @@ export default function Projetos() {
   async function handleDelete(id) {
     if (window.confirm("Tem certeza que deseja excluir este projeto?")) {
       try {
-        await deleteProject(id);
+        await fetch(`${API_URL}/projects/${id}/delete/`, { method: "DELETE" });
         fetchProjetos();
       } catch (err) {
         setError("Erro ao excluir projeto");

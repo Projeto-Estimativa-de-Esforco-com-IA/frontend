@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getTasks, addTask, editTask, deleteTask, getProjects } from "../api";
+import { API_URL } from "../api";
 
 export default function Tarefas() {
   const [tarefas, setTarefas] = useState([]);
@@ -34,7 +34,8 @@ export default function Tarefas() {
     setLoading(true);
     setError(null);
     try {
-      const data = await getProjects();
+      const res = await fetch(`${API_URL}/projetos`);
+      const data = await res.json();
       setProjetos(data);
       if (data.length > 0) setSelectedProjeto(data[0].id);
     } catch (err) {
@@ -48,7 +49,8 @@ export default function Tarefas() {
     setLoading(true);
     setError(null);
     try {
-      const data = await getTasks(projectId);
+      const res = await fetch(`${API_URL}/projects/${projectId}/tasks/`);
+      const data = await res.json();
       setTarefas(data);
     } catch (err) {
       setError("Erro ao carregar tarefas");
@@ -65,9 +67,17 @@ export default function Tarefas() {
     e.preventDefault();
     try {
       if (editId) {
-        await editTask(editId, form);
+        await fetch(`${API_URL}/tasks/${editId}/edit/`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(form),
+        });
       } else {
-        await addTask(selectedProjeto, { ...form, projeto: selectedProjeto });
+        await fetch(`${API_URL}/projects/${selectedProjeto}/tasks/add/`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ ...form, projeto: selectedProjeto }),
+        });
       }
       setForm({ 
         titulo: "", 
@@ -101,7 +111,7 @@ export default function Tarefas() {
   async function handleDelete(id) {
     if (window.confirm("Tem certeza que deseja excluir esta tarefa?")) {
       try {
-        await deleteTask(id);
+        await fetch(`${API_URL}/tasks/${id}/delete/`, { method: "DELETE" });
         fetchTarefas(selectedProjeto);
       } catch (err) {
         setError("Erro ao excluir tarefa");

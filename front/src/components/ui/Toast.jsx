@@ -1,4 +1,12 @@
-import { Toaster } from 'react-hot-toast'
+import { Toaster, toast as baseToast } from 'react-hot-toast'
+
+export const showToast = {
+  success: (msg) => baseToast.success(msg),
+  error: (msg) => baseToast.error(msg),
+  info: (msg) => baseToast(msg),
+  loading: (msg) => baseToast.loading(msg),
+  dismiss: (id) => baseToast.dismiss(id),
+};
 
 const Toast = () => {
   return (

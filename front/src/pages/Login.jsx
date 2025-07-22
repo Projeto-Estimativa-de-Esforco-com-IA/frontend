@@ -4,17 +4,18 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import toast from "react-hot-toast";
-import { useAuthStore } from "../stores/authStore";
 import Button from "../components/ui/Button";
 import Input from "../components/ui/Input";
+import { login as apiLogin, register as apiRegister } from "../api";
+import { showToast } from "../components/ui/Toast";
 
 const loginSchema = z.object({
   email: z.string().email("E-mail inválido"),
-  password: z.string().min(6, "Senha deve ter pelo menos 6 caracteres"),
+  password: z.string().min(1, "Senha obrigatória"),
 });
 
 const registerSchema = z.object({
-  name: z.string().min(2, "Nome deve ter pelo menos 2 caracteres"),
+  username: z.string().min(2, "Nome de usuário deve ter pelo menos 2 caracteres"),
   email: z.string().email("E-mail inválido"),
   password: z.string().min(6, "Senha deve ter pelo menos 6 caracteres"),
   confirmPassword: z.string(),
@@ -25,9 +26,10 @@ const registerSchema = z.object({
 
 export default function Login() {
   const [isRegister, setIsRegister] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
-  const { login, isLoading, error } = useAuthStore();
 
   const {
     register,
@@ -39,24 +41,27 @@ export default function Login() {
   });
 
   const onSubmit = async (data) => {
+    window.setGlobalLoading(true);
+    setError(null);
     try {
       if (isRegister) {
-        // Simulação de registro
-        toast.success("Conta criada com sucesso!");
+        await apiRegister({ username: data.username, email: data.email, password: data.password });
+        showToast.success("Conta criada com sucesso!");
         setIsRegister(false);
         reset();
       } else {
-        const result = await login(data.email, data.password);
-        if (result.success) {
-          toast.success("Login realizado com sucesso!");
-          const from = location.state?.from?.pathname || "/";
-          navigate(from, { replace: true });
-        } else {
-          toast.error(result.error || "Erro no login");
-        }
+        const res = await apiLogin({ email: data.email, password: data.password });
+        // Salvar usuário autenticado (exemplo: localStorage)
+        localStorage.setItem("user", JSON.stringify(res.user || { email: data.email }));
+        showToast.success("Login realizado com sucesso!");
+        const from = location.state?.from?.pathname || "/";
+        navigate(from, { replace: true });
       }
-    } catch (error) {
-      toast.error("Erro inesperado");
+    } catch (err) {
+      setError(err.message || "Erro inesperado");
+      showToast.error(err.message || "Erro inesperado");
+    } finally {
+      window.setGlobalLoading(false);
     }
   };
 
@@ -66,17 +71,16 @@ export default function Login() {
         <h2 className="text-2xl font-bold mb-6 text-center">
           {isRegister ? "Criar Conta" : "Entrar"}
         </h2>
-        
+        {error && <div className="mb-4 p-3 bg-red-100 text-red-800 rounded-lg shadow text-center font-medium">{error}</div>}
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           {isRegister && (
             <Input
-              label="Nome"
-              {...register("name")}
-              error={errors.name?.message}
-              placeholder="Seu nome completo"
+              label="Nome de usuário"
+              {...register("username")}
+              error={errors.username?.message}
+              placeholder="Seu nome de usuário"
             />
           )}
-          
           <Input
             label="E-mail"
             type="email"
@@ -84,7 +88,6 @@ export default function Login() {
             error={errors.email?.message}
             placeholder="seu@email.com"
           />
-          
           <Input
             label="Senha"
             type="password"
@@ -92,7 +95,6 @@ export default function Login() {
             error={errors.password?.message}
             placeholder="Sua senha"
           />
-          
           {isRegister && (
             <Input
               label="Confirmar Senha"
@@ -102,17 +104,15 @@ export default function Login() {
               placeholder="Confirme sua senha"
             />
           )}
-          
           <Button
             type="submit"
             className="w-full"
-            loading={isLoading}
-            disabled={isLoading}
+            // loading global
+            disabled={false}
           >
             {isRegister ? "Registrar" : "Entrar"}
           </Button>
         </form>
-        
         <div className="mt-4 text-center">
           <button
             type="button"
@@ -120,6 +120,7 @@ export default function Login() {
             onClick={() => {
               setIsRegister(!isRegister);
               reset();
+              setError(null);
             }}
           >
             {isRegister

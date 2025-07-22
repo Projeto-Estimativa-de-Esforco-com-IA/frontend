@@ -196,3 +196,25 @@ Para dúvidas ou problemas, abra uma issue no repositório.
 ---
 
 **Desenvolvido com ❤️ para a Sprint 4**
+
+# Frontend (React + CRA + Tailwind)
+
+## Como rodar com Docker (compatível com Apple M1/M2)
+
+1. Certifique-se de que o backend e o banco estão configurados no docker-compose.yml.
+2. Na raiz do projeto, execute:
+
+```sh
+docker-compose up --build
+```
+
+3. O frontend estará disponível em: http://localhost:3000
+
+## Scripts disponíveis
+
+- `npm start` — roda o app em modo desenvolvimento (porta 3000)
+- `npm run build` — build de produção
+
+## Observações
+- O Dockerfile e o docker-compose.yml já estão prontos para ARM/M1/M2.
+- O backend deve estar rodando em http://localhost:8000/api para integração.
